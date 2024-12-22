@@ -1,0 +1,18 @@
+{
+    "name": "tasty_trip_server",
+    "version": "1.0.0",
+    "description": "A robust Node.js backend server designed to fetch real-time restaurant and menu data from the Swiggy API. It serves as an intermediary layer, processing and securely exposing the data to a React-based frontend (FoodFire app), providing a seamless and efficient user experience. The server handles data caching, error handling, and optimized API calls to ensure fast and reliable communication between the client and Swiggy’s API",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "start": "node server.js",
+        "build": "parcel build server.js --target node --out-dir dist"
+    },
+    "dependencies": {
+        "cors": "^2.8.5",
+        "cross-fetch": "^4.0.0",
+        "express": "^4.21.2"
+    },
+    "devDependencies": {
+        "parcel-bundler": "^1.12.5"
+    }
+}
