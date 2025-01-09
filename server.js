@@ -1,59 +1,63 @@
+// proxy-server/index.js
 const express = require("express");
 const cors = require("cors");
-
+const axios = require("axios");
 const app = express();
-const PORT = process.env.PORT || 5000;
 
-app.use(cors()); // Enable CORS for all routes
+// Enable CORS for your frontend domain
+app.use(
+  cors({
+    origin: process.env.FRONTEND_URL || "http://localhost:3000",
+  })
+);
 
-// Endpoint to fetch restaurant list
+// Proxy endpoint for restaurant list
 app.get("/api/restaurants", async (req, res) => {
-  const swiggyApiUrl =
-    "https://www.swiggy.com/dapi/restaurants/list/v5?lat=18.990088&lng=75.7531324&is-seo-homepage-enabled=true&page_type=DESKTOP_WEB_LISTING";
-
   try {
-    // Use native fetch
-    const response = await fetch(swiggyApiUrl);
-
-    // Check if the response is OK
-    if (!response.ok) {
-      throw new Error(
-        `Swiggy API error: ${response.status} ${response.statusText}`
-      );
-    }
-
-    const data = await response.json();
-    res.json(data); // Send the data to the frontend
+    const response = await axios.get(
+      "https://www.swiggy.com/dapi/restaurants/list/v5",
+      {
+        params: {
+          lat: req.query.lat || "18.990088",
+          lng: req.query.lng || "75.7531324",
+          "is-seo-homepage-enabled": true,
+          page_type: "DESKTOP_WEB_LISTING",
+        },
+        headers: {
+          "User-Agent": "Mozilla/5.0",
+          Accept: "application/json",
+        },
+      }
+    );
+    res.json(response.data);
   } catch (error) {
-    console.error("Error fetching data from Swiggy API:", error.message);
-    res.status(500).json({ error: error.message || "Internal Server Error" });
+    res.status(500).json({ error: error.message });
   }
 });
 
-// Endpoint to fetch menu for a specific restaurant
+// Proxy endpoint for restaurant menu
 app.get("/api/menu/:restaurantId", async (req, res) => {
-  const { restaurantId } = req.params;
-  const swiggyMenuApiUrl = `https://www.swiggy.com/dapi/menu/pl?page-type=REGULAR_MENU&complete-menu=true&lat=18.990088&lng=75.7531324&restaurantId=${restaurantId}`;
-
   try {
-    // Use native fetch
-    const response = await fetch(swiggyMenuApiUrl);
-
-    // Check if the response is OK
-    if (!response.ok) {
-      throw new Error(
-        `Swiggy API error: ${response.status} ${response.statusText}`
-      );
-    }
-
-    const data = await response.json();
-    res.json(data); // Send the data to the frontend
+    const response = await axios.get(`https://www.swiggy.com/dapi/menu/pl`, {
+      params: {
+        "page-type": "REGULAR_MENU",
+        "complete-menu": true,
+        lat: "18.990088",
+        lng: "75.7531324",
+        restaurantId: req.params.restaurantId,
+      },
+      headers: {
+        "User-Agent": "Mozilla/5.0",
+        Accept: "application/json",
+      },
+    });
+    res.json(response.data);
   } catch (error) {
-    console.error("Error fetching menu from Swiggy API:", error.message);
-    res.status(500).json({ error: error.message || "Internal Server Error" });
+    res.status(500).json({ error: error.message });
   }
 });
 
+const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+  console.log(`Proxy server running on port ${PORT}`);
 });
