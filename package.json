@@ -10,9 +10,14 @@
     "dependencies": {
         "cors": "^2.8.5",
         "cross-fetch": "^4.0.0",
-        "express": "^4.21.2"
+        "express": "^4.21.2",
+        "node-fetch": "^3.3.2"
     },
     "devDependencies": {
         "parcel-bundler": "^1.12.5"
-    }
+    },
+    "main": "server.js",
+    "keywords": [],
+    "author": "",
+    "license": "ISC"
 }
