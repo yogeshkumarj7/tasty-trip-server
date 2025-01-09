@@ -14,10 +14,19 @@ app.get("/api/restaurants", async (req, res) => {
 
   try {
     const response = await fetch(swiggyApiUrl);
+
+    // Check if Swiggy API responded with an error
+    if (!response.ok) {
+      throw new Error(
+        `Swiggy API error: ${response.status} ${response.statusText}`
+      );
+    }
+
     const data = await response.json();
     res.json(data); // Send the data to the frontend
   } catch (error) {
-    res.status(500).json({ error: "Error fetching data from Swiggy API" });
+    console.error("Error fetching data from Swiggy API:", error.message);
+    res.status(500).json({ error: error.message || "Internal Server Error" });
   }
 });
 
@@ -28,10 +37,19 @@ app.get("/api/menu/:restaurantId", async (req, res) => {
 
   try {
     const response = await fetch(swiggyMenuApiUrl);
+
+    // Check if Swiggy API responded with an error
+    if (!response.ok) {
+      throw new Error(
+        `Swiggy API error: ${response.status} ${response.statusText}`
+      );
+    }
+
     const data = await response.json();
     res.json(data); // Send the data to the frontend
   } catch (error) {
-    res.status(500).json({ error: "Error fetching menu from Swiggy API" });
+    console.error("Error fetching menu from Swiggy API:", error.message);
+    res.status(500).json({ error: error.message || "Internal Server Error" });
   }
 });
 
