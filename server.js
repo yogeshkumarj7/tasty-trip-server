@@ -1,6 +1,5 @@
 const express = require("express");
 const cors = require("cors");
-const fetch = require("node-fetch");
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -13,9 +12,10 @@ app.get("/api/restaurants", async (req, res) => {
     "https://www.swiggy.com/dapi/restaurants/list/v5?lat=18.990088&lng=75.7531324&is-seo-homepage-enabled=true&page_type=DESKTOP_WEB_LISTING";
 
   try {
+    // Use native fetch
     const response = await fetch(swiggyApiUrl);
 
-    // Check if Swiggy API responded with an error
+    // Check if the response is OK
     if (!response.ok) {
       throw new Error(
         `Swiggy API error: ${response.status} ${response.statusText}`
@@ -36,9 +36,10 @@ app.get("/api/menu/:restaurantId", async (req, res) => {
   const swiggyMenuApiUrl = `https://www.swiggy.com/dapi/menu/pl?page-type=REGULAR_MENU&complete-menu=true&lat=18.990088&lng=75.7531324&restaurantId=${restaurantId}`;
 
   try {
+    // Use native fetch
     const response = await fetch(swiggyMenuApiUrl);
 
-    // Check if Swiggy API responded with an error
+    // Check if the response is OK
     if (!response.ok) {
       throw new Error(
         `Swiggy API error: ${response.status} ${response.statusText}`
