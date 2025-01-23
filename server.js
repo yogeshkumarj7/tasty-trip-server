@@ -5,11 +5,18 @@ const axios = require("axios");
 const app = express();
 
 // Enable CORS for your frontend domain
+// app.use(
+//   cors({
+//     origin: process.env.FRONTEND_URL || "http://localhost:3000",
+//   })
+// );
+
 app.use(
   cors({
-    origin: process.env.FRONTEND_URL || "http://localhost:3000",
+    origin: "*", // Allow all origins
   })
 );
+
 
 // Proxy endpoint for restaurant list
 app.get("/api/restaurants", async (req, res) => {
